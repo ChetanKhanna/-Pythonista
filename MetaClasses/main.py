@@ -41,13 +41,31 @@ class _Singleton(type):
     """
     _instances = {}
     def __call__(cls, *args, **kwargs):
+        """
+        Remember here __call__ in that of a metaclass and therefore will
+        be executed before __new__ and __init__ of the class (the __call__
+        of actual class never get executed in our example)
+        Dont confuse it with the order or execution of __new__ __init__
+        and __call__ defined below for instance creation.
+        MetaClasses are for class creation, analogous to as classes are for
+        instance creation.
+        """
+        print('__call in _Singleton')
         if cls not in cls._instances:
             cls._instances[cls] = super(_Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
 
 class Singleton(metaclass=_Singleton):
-    pass
+    def __new__(cls, *args, **kwargs):
+        print('__new__ in Singleton')
+        return super(Singleton, cls).__new__(cls, *args, **kwargs)
+    
+    def __init__(self, *args, **kwargs):
+        print('__init__ in Singleton')
+
+    def __call__(self, *args, **kwargs):
+        print('__call__ in Singleton')
 
 # Testing for singleton class
 first_obj = Singleton()
