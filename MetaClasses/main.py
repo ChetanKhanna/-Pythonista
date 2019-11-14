@@ -54,3 +54,30 @@ first_obj = Singleton()
 second_obj = Singleton()
 print(first_obj == second_obj)
 print(id(first_obj), id(second_obj))
+
+# Understanding __call__, __new__ and __init__
+"""
+When class instance is executed (called like a function), __call__ in executed.
+During object instantiation, first __new__ and then __init__ are called.
+If __new__ returns the newly created instance of the class, i.e., by returning:
+`instance = super(MyClass, cls).__new__(*args, **kwargs)`
+`return instance`
+If not, for eg. __new__ returns anything else, then an explicit call to __init__
+before returning is necessary
+"""
+
+class TestClass:
+    def __new__(cls, *args, **kwargs):
+        print('__new__')
+        return super(TestClass, cls).__new__(cls, *args, **kwargs)
+
+    def __init__(self, *args, **kwargs):
+        print('__init__')
+
+    def __call__(self, *args, **kwargs):
+        print('__call__')
+
+
+# Testing
+tc = TestClass()
+tc()
