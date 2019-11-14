@@ -33,3 +33,24 @@ class Voodoo(metaclass=Meta):
 
 class_instance = Voodoo()
 
+
+# Implementing a Singleton class
+class _Singleton(type):
+    """
+    A metaclass that forms the Singleton base class
+    """
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(_Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+class Singleton(metaclass=_Singleton):
+    pass
+
+# Testing for singleton class
+first_obj = Singleton()
+second_obj = Singleton()
+print(first_obj == second_obj)
+print(id(first_obj), id(second_obj))
